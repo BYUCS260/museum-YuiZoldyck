@@ -81,6 +81,7 @@ export default {
         this.items = response.data;
         return true;
       } catch (error) {
+        // eslint-disable-next-line
         console.log(error);
       }
     },

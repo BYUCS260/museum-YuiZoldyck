@@ -139,6 +139,7 @@ export default {
   created() {
     this.getItems();
   },
+  /* eslint-disable */
   methods: {
     fileChanged(event) {
       this.file = event.target.files[0]
@@ -196,5 +197,6 @@ export default {
       }
     },
   }
+  /* eslint-disable */
 }
 </script>
