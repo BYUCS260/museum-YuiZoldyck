@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({
 const mongoose = require('mongoose');
 
 // connect to the database
-mongoose.connect('mongodb://localhost:27017/museum', {
+mongoose.connect('mongodb://localhost:27017/recipeblog', {
   useNewUrlParser: true
 });
 
@@ -23,15 +23,16 @@ const upload = multer({
   }
 });
 
-// Create a scheme for items in the museum: a title and a path to an image.
-const itemSchema = new mongoose.Schema({
+// Create a scheme for recipes in the museum: a title and a path to an image.
+const recipeSchema = new mongoose.Schema({
   title: String,
   description: String,
+  recipe: String,
   path: String,
 });
 
-// Create a model for items in the museum.
-const Item = mongoose.model('Item', itemSchema);
+// Create a model for recipes in the museum.
+const Recipe = mongoose.model('Recipe', recipeSchema);
 
 // Upload a photo. Uses the multer middleware for the upload and then returns
 // the path where the photo is stored in the file system.
@@ -46,38 +47,39 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
   });
 });
 
-// Create a new item in the museum: takes a title and a path to an image.
-app.post('/api/items', async (req, res) => {
-  console.log('api/items ' , req.body.title)
-  const item = new Item({
+// Create a new recipe in the museum: takes a title and a path to an image.
+app.post('/api/recipes', async (req, res) => {
+  console.log('api/recipes ' , req.body.title)
+  const recipe = new Recipe({
     title: req.body.title,
     description: req.body.description,
+    recipe: req.body.recipe,
     path: req.body.path,
   });
   try {
-    await item.save();
-    res.send(item);
+    await recipe.save();
+    res.send(recipe);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
   }
 });
 
-// Get a list of all of the items in the museum.
-app.get('/api/items', async (req, res) => {
+// Get a list of all of the recipes in the museum.
+app.get('/api/recipes', async (req, res) => {
   try {
-    let items = await Item.find();
-    res.send(items);
+    let recipes = await Recipe.find();
+    res.send(recipes);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
   }
 });
 
-app.delete('/api/items/:id', async (req, res) => {
+app.delete('/api/recipes/:id', async (req, res) => {
   console.log('Delete ' , req.params.id);
   try {
-    await Item.deleteOne({
+    await Recipe.deleteOne({
       _id: req.params.id
     });
     res.sendStatus(200);
@@ -87,16 +89,16 @@ app.delete('/api/items/:id', async (req, res) => {
   }
 });
 
-app.put('/api/items/:id', async (req, res) => {
+app.put('/api/recipes/:id', async (req, res) => {
   console.log('Edit ' , req.params.id);
-  let item = await Item.findOne({
+  let recipe = await Recipe.findOne({
     _id: req.params.id
   });
-  item.title = req.body.title;
-  item.description = req.body.description;
+  recipe.title = req.body.title;
+  recipe.description = req.body.description;
   try {
-    await item.save();
-    res.send(item);
+    await recipe.save();
+    res.send(recipe);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
