@@ -1,10 +1,10 @@
 <template>
 <div class="home">
   <section class="image-gallery">
-    <div class="image" v-for="recipe in recipes" :key="recipe.id">
-      <h2>{{recipe.title}}</h2>
-      <p>{{recipe.description}}</p>
-      <img :src="recipe.path" />
+    <div class="image" v-for="item in items" :key="item.id">
+      <h2>{{item.title}}</h2>
+      <p>{{item.description}}</p>
+      <img :src="item.path" />
     </div>
   </section>
 </div>
@@ -68,17 +68,17 @@ export default {
   name: 'HomeView',
   data() {
     return {
-     recipes: [],
+     items: [],
     }
   },
   created() {
-    this.getRecipes();
+    this.getItems();
   },
   methods: {
-    async getRecipes() {
+    async getItems() {
       try {
-        let response = await axios.get("/api/recipes");
-        this.recipes = response.data;
+        let response = await axios.get("/api/items");
+        this.items = response.data;
         return true;
       } catch (error) {
         // eslint-disable-next-line
